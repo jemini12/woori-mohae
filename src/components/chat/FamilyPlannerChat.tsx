@@ -123,7 +123,7 @@ export function FamilyPlannerChat() {
   const { control } = useChatKit(options);
 
   return (
-    <div className="flex w-full max-w-4xl flex-col gap-4 rounded-[32px] border border-[color:var(--border-muted)] bg-white/90 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.14)] backdrop-blur">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 rounded-[32px] border border-[color:var(--border-muted)] bg-white/90 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.14)] backdrop-blur">
       {isScriptReady ? (
         <ChatKit
           control={control}
