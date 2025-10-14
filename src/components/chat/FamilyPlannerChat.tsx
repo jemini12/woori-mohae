@@ -1,5 +1,6 @@
 "use client";
 
+import type { ChatKitEvents } from "@openai/chatkit";
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -106,7 +107,7 @@ export function FamilyPlannerChat() {
         colorScheme: "light" as const,
         radius: "round" as const,
       },
-      onError: ({ error }) => {
+      onError: ({ error }: ChatKitEvents["chatkit.error"]["detail"]) => {
         console.error("ChatKit error", error);
         setError(error?.message ?? "Unexpected ChatKit error. Check console for details.");
       },
