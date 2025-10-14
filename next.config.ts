@@ -10,6 +10,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob:",
       "font-src 'self' data:",
+      "frame-src 'self' https://cdn.platform.openai.com",
       "frame-ancestors 'self'",
       "base-uri 'self'",
       "form-action 'self'",
