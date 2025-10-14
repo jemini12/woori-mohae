@@ -1,12 +1,12 @@
 # Woori Mohae · Family Concierge
 
-Launch-ready marketing page and embedded ChatKit experience for an AgentKit-powered family planning workflow. Woori Mohae speaks to Korean parents, helping them stitch together weekend or weekday routines with weather-aware backups in minutes.
+Minimal ChatKit integration for an AgentKit-powered family planning workflow. Woori Mohae speaks to Korean parents, helping them stitch together weekend or weekday routines with weather-aware backups in minutes—right inside a single chat surface.
 
 ## Overview
 
 - **Stack** – Next.js 15 (App Router), Tailwind CSS 4, ChatKit React bindings, OpenAI `beta.chatkit.sessions`.
 - **Workflow ready** – Aligns with an Agent Builder flow that greets parents, gathers age bands, location, routines, preferences, and constraints, then summarises before running the tool plan.
-- **Brand forward** – Gradient backdrop, frosted panels, and responsive cards showcase the concierge with production-friendly copy.
+- **Focused UI** – Lightweight header above the ChatKit widget keeps parents in the conversation with no extra marketing blocks.
 - **Extensible** – Swap in your AgentKit actions for venues, weather, transit, budget, or loyalty integrations.
 
 ## Getting Started
@@ -60,7 +60,7 @@ Mirror these checkpoints inside your workflow instructions so every chat stays s
 ## Design Guarantees
 
 - Responsive layout with accessible contrast, keyboard-friendly navigation, and semantic HTML.
-- Radial gradients and frosted glass cards frame the ChatKit widget without distracting from it.
+- Radial gradients and a frosted chat container keep focus on the concierge while staying brandable.
 - CSS variables for brand colours plus Tailwind utility classes for rapid iteration.
 - Metadata slots (OpenGraph/Twitter) pre-filled for future SEO and sharing needs.
 
