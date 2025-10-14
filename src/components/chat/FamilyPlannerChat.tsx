@@ -111,6 +111,11 @@ export function FamilyPlannerChat() {
         console.error("ChatKit error", error);
         setError(error?.message ?? "Unexpected ChatKit error. Check console for details.");
       },
+      onResponseStart: () => console.info("[Woori Mohae] ChatKit response started"),
+      onResponseEnd: () => console.info("[Woori Mohae] ChatKit response finished"),
+      onLog: ({ name, data }: ChatKitEvents["chatkit.log"]["detail"]) => {
+        console.info(`[Woori Mohae] ChatKit log: ${name}`, data ?? {});
+      },
     }),
     [fetchClientSecret],
   );
