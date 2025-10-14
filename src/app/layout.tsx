@@ -41,8 +41,10 @@ export default function RootLayout({
       <head>
         <Script
           id="chatkit-script"
-          src="https://cdn.platform.openai.com/deployments/chatkit/latest/chatkit.js"
+          src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js"
           strategy="beforeInteractive"
+          onLoad={() => console.info("[Woori Mohae] ChatKit script loaded")}
+          onError={() => console.error("[Woori Mohae] Failed to load ChatKit script")}
         />
       </head>
       <body

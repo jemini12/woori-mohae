@@ -60,7 +60,7 @@ export function FamilyPlannerChat() {
       return;
     }
 
-    const maxAttempts = 50;
+    const maxAttempts = 120;
     let attempts = 0;
     const timer = window.setInterval(() => {
       attempts += 1;
@@ -73,7 +73,7 @@ export function FamilyPlannerChat() {
       } else if (attempts >= maxAttempts) {
         window.clearInterval(timer);
         setError(
-          "Chat widget failed to load. Ensure https://cdn.platform.openai.com is reachable.",
+          "Chat widget failed to load. Confirm https://cdn.platform.openai.com/deployments/chatkit/chatkit.js is accessible and your domain is allowlisted.",
         );
       }
     }, 100);
