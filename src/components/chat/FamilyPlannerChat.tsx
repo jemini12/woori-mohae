@@ -4,28 +4,82 @@ import type { ChatKitEvents } from "@openai/chatkit";
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-const STARTER_PROMPTS = [
-  {
-    label: "Seoul Saturday blueprint",
-    prompt:
-      "We’re based near Seoul Forest with kids 3 and 8. Craft a Saturday plan with outdoor play, culture, and a calm evening wind-down.",
-    icon: "calendar" as const,
-  },
-  {
-    label: "Rain-ready routines",
-    prompt:
-      "It’s expected to rain in Busan. Design a Sunday itinerary for siblings aged 2 and 6 that balances energy, meals, and indoor adventures.",
-    icon: "lifesaver" as const,
-  },
-  {
-    label: "Half-day Daegu dash",
-    prompt:
-      "We only have Sunday afternoon in Daegu. Suggest two can’t-miss experiences plus reminders for naps and dinner.",
-    icon: "sparkle" as const,
-  },
-];
+type SupportedLanguage = "en" | "ko";
 
-export function FamilyPlannerChat() {
+const LOCALE_COPY: Record<
+  SupportedLanguage,
+  {
+    prompts: { label: string; prompt: string; icon: "calendar" | "lifesaver" | "sparkle" }[];
+    greeting: string;
+    placeholder: string;
+    tip: string;
+    badge: string;
+  }
+> = {
+  en: {
+    prompts: [
+      {
+        label: "Seoul Saturday blueprint",
+        prompt:
+          "We’re based near Seoul Forest with kids 3 and 8. Craft a Saturday plan with outdoor play, culture, and a calm evening wind-down.",
+        icon: "calendar",
+      },
+      {
+        label: "Rain-ready routines",
+        prompt:
+          "It’s expected to rain in Busan. Design a Sunday itinerary for siblings aged 2 and 6 that balances energy, meals, and indoor adventures.",
+        icon: "lifesaver",
+      },
+      {
+        label: "Half-day Daegu dash",
+        prompt:
+          "We only have Sunday afternoon in Daegu. Suggest two can’t-miss experiences plus reminders for naps and dinner.",
+        icon: "sparkle",
+      },
+    ],
+    greeting:
+      "Annyeong! Tell me your family’s ages, routines, and preferences so I can build the perfect day.",
+    placeholder:
+      "Tell me your kids’ ages, neighborhood or subway line, routines, and any must-haves…",
+    tip: "Tip: share age bands (0-3, 4-6, 7-9, 10-12), where you live, and routines you care about most. I’ll ask follow-ups before proposing plans.",
+    badge: "Always double-check availability",
+  },
+  ko: {
+    prompts: [
+      {
+        label: "서울 토요일 일정 짜기",
+        prompt:
+          "서울숲 근처에 사는 3살, 8살 아이가 있는 가족이에요. 야외 활동과 문화 체험, 저녁 휴식까지 균형 잡힌 토요일 계획을 만들어 주세요.",
+        icon: "calendar",
+      },
+      {
+        label: "비 오는 날 루틴",
+        prompt:
+          "부산에 비 예보가 있어요. 2살, 6살 남매가 지루하지 않도록 실내 위주의 일요일 일정을 만들어 주세요. 식사와 낮잠도 챙겨 주세요.",
+        icon: "lifesaver",
+      },
+      {
+        label: "대구 반나절 코스",
+        prompt:
+          "일요일 오후만 대구에 머물 수 있어요. 꼭 가봐야 할 활동 두 가지와 낮잠, 저녁 식사 알림까지 제안해 주세요.",
+        icon: "sparkle",
+      },
+    ],
+    greeting:
+      "안녕하세요! 아이들 나이, 가족 일정, 선호를 알려 주시면 균형 잡힌 하루 일정을 만들어 드릴게요.",
+    placeholder:
+      "아이 나이, 사는 지역이나 지하철역, 루틴과 꼭 포함하고 싶은 것들을 알려 주세요…",
+    tip: "Tip: 연령대(0-3, 4-6, 7-9, 10-12), 사는 곳, 챙겨야 할 루틴을 먼저 알려 주세요. 필요한 내용을 확인한 후 일정을 제안해 드릴게요.",
+    badge: "최종 일정은 직접 확인해 주세요",
+  },
+};
+
+type FamilyPlannerChatProps = {
+  language?: SupportedLanguage;
+};
+
+export function FamilyPlannerChat({ language = "en" }: FamilyPlannerChatProps) {
+  const locale = LOCALE_COPY[language];
   const [error, setError] = useState<string | null>(null);
   const [isScriptReady, setScriptReady] = useState(false);
 
@@ -87,21 +141,17 @@ export function FamilyPlannerChat() {
         getClientSecret: fetchClientSecret,
       },
       header: {
-        title: {
-          text: "Woori Mohae Concierge",
-        },
+        enabled: false,
       },
       history: {
         enabled: false,
       },
       startScreen: {
-        greeting:
-          "Annyeong! Share your crew’s ages, routines, preferences, and timing—I’ll stitch together a balanced plan.",
-        prompts: STARTER_PROMPTS,
+        greeting: locale.greeting,
+        prompts: locale.prompts,
       },
       composer: {
-        placeholder:
-          "Tell me your family’s ages, neighborhood or subway line, routines, and any must-haves…",
+        placeholder: locale.placeholder,
       },
       theme: {
         colorScheme: "light" as const,
@@ -117,7 +167,7 @@ export function FamilyPlannerChat() {
         console.info(`[Woori Mohae] ChatKit log: ${name}`, data ?? {});
       },
     }),
-    [fetchClientSecret],
+    [fetchClientSecret, locale.greeting, locale.placeholder, locale.prompts],
   );
 
   const { control } = useChatKit(options);
@@ -140,13 +190,9 @@ export function FamilyPlannerChat() {
         </div>
       ) : null}
       <div className="grid gap-2 text-sm text-slate-600 sm:grid-cols-[1fr_auto] sm:items-center">
-        <p>
-          Tip: start with age bands (0-3, 4-6, 7-9, 10-12), where you live, and the
-          routines you care about most. The agent will probe for constraints before
-          proposing plans.
-        </p>
+        <p>{locale.tip}</p>
         <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[color:var(--accent-soft)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--accent)]">
-          Always double-check availability
+          {locale.badge}
         </span>
       </div>
     </div>
